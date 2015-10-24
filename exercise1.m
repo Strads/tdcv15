@@ -2,8 +2,8 @@
 clear all; clc; close all;
 
 %Read in and plot the input image
-input = imread('lena.gif');
-figure; subplot(1,2,1); imagesc(double(input));
+input = double(imread('lena.gif'));
+figure; subplot(1,2,1); imagesc(input);
 
 %Create the input mask
 mask = ones(3,3);

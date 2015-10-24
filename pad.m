@@ -1,19 +1,28 @@
-function I_pad = pad(I_in, padX, padY, type)
-I_pad = zeros(2*padX+size(I_in,1),2*padY+size(I_in,2));
-I_pad(padX+1:end-padX, padY+1:end-padY) = I_in;
+function padded_image = pad(input, padX, padY, type)
+%Inititalise the an output array of the right size
+padded_image = zeros(2*padX+size(input,1),2*padY+size(input,2));
 
+%The interior of the padded image is simply the input image
+padded_image(padX+1:end-padX, padY+1:end-padY) = input;
+
+%Copy the border pixel throughout the padding
 if strcmp(type,'replicate')
-    % Sides:
-    I_pad(1:padX,padY+1:end-padY) = repmat(I_in(1,:),1,padX);
-    I_pad(end-padX+1:end,padY+1:end-padY) = repmat(I_in(end,:),1,padX);
-    I_pad(padX+1:end-padX,1:padY) = repmat(I_in(:,1),padY,1);
-    I_pad(padX+1:end-padX,end-padY+1:end) = repmat(I_in(:,end),padY,1);
+    %Left side
+    padded_image(padY+1:end-padY,1:padX) = repmat(input(:,1),1,padX);
+    %Right side
+    padded_image(padY+1:end-padY,end-padX+1:end) = repmat(input(:,end),1,padX);
+    %Top
+    padded_image(1:padY,padX+1:end-padX) = repmat(input(1,:),padY,1);
+    %Bottom
+    padded_image(end-padY+1:end,padX+1:end-padX) = repmat(input(end,:),padY,1);
     % Corners
-    I_pad(end-padX+1:end,end-padY+1) = ones(padX,padY)*I_in(end,end);
-    I_pad(1:padX,1:padY) = ones(padX,padY)*I_in(1,1);
-    I_pad(1:padX,end-padY+1) = ones(padX,padY)*I_in(1,end);
-    I_pad(end-padX+1,1:padY) = ones(padX,padY)*I_in(end,1);
-    
+    padded_image(end-padY+1:end,end-padX+1:end) = ones(padX,padY)*input(end,end);
+    padded_image(1:padX,1:padY) = ones(padX,padY)*input(1,1);
+    padded_image(1:padX,end-padY+1:end) = ones(padX,padY)*input(1,end);
+    padded_image(end-padX+1:end,1:padY) = ones(padX,padY)*input(end,1);
+
+%A padding pixel n pixels from the border takes the value of the
+%corresponding pixel -n pixels from the border. 
 elseif strcmp(type,'symmetric')
     error('Not yet implemented')
     
